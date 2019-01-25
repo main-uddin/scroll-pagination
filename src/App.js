@@ -1,27 +1,37 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
+  state = {
+    photos: []
+  };
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        {this.state.photos.map(e => (
+          <img className="img" src={e} alt="not found" />
+        ))}
       </div>
     );
+  }
+  componentDidMount() {
+    fetch(
+      'https://cors-anywhere.herokuapp.com/https://api.pexels.com/v1/search?query=sexy+query&per_page=15&page=1',
+      {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization:
+            '563492ad6f9170000100000154dfd7cac5734ffbab147db82c7618e9'
+        }
+      }
+    )
+      .then(res => res.json())
+      .then(data =>
+        data.photos.forEach(url =>
+          this.setState({ photos: this.state.photos.concat(url.src.original) })
+        )
+      );
   }
 }
 
