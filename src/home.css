@@ -1,0 +1,15 @@
+ .photos{
+     width: 90%;
+     height: 100vh;
+     display:grid;
+     grid-gap: 20px 15px;
+     grid-template-columns: 2fr 2fr 1fr;
+} 
+*{
+    box-sizing: border-box;
+}
+ .img{
+    height: 30vw;
+    border-radius: 10px;
+    width: 100%;
+}
