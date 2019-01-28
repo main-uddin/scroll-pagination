@@ -5,7 +5,7 @@ import searchImg from './search.png'
 class Home extends Component {
   state = {
     photos: [],
-    queryStr: 'sexy',
+    queryStr: 'wine',
     page: 1,
     notSent: true
   }
@@ -48,20 +48,19 @@ class Home extends Component {
         page: this.state.page + 1,
         notSent: false
       })
-      window
-        .fetch(
-          `https://cors-anywhere.herokuapp.com/https://api.pexels.com/v1/search?query=${
-            this.state.photos
-          }+query&per_page=20&page=${this.state.page}`,
-          {
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              Authorization:
-                '563492ad6f9170000100000154dfd7cac5734ffbab147db82c7618e9'
-            }
+      fetch(
+        `https://cors-anywhere.herokuapp.com/https://api.pexels.com/v1/search?query=${
+          this.state.photos
+        }+query&per_page=20&page=${this.state.page}`,
+        {
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization:
+              '563492ad6f9170000100000154dfd7cac5734ffbab147db82c7618e9'
           }
-        )
+        }
+      )
         .then(res => res.json())
         .then(data =>
           data.photos.forEach(url =>
@@ -71,6 +70,7 @@ class Home extends Component {
             })
           )
         )
+        .catch(err => console.log(err))
     }
   }
 
