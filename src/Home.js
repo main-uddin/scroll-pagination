@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
-import './home.css';
+import React, { Component } from 'react'
+import './home.css'
+import searchImg from './search.png'
 
 class Home extends Component {
   state = {
@@ -7,48 +8,13 @@ class Home extends Component {
     queryStr: 'sexy',
     page: 1,
     notSent: true
-  };
-
-  componentDidMount() {
-    fetch(
-      `https://cors-anywhere.herokuapp.com/https://api.pexels.com/v1/search?query=${
-        this.state.queryStr
-      }+query&per_page=20&page=${this.state.page}`,
-      {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization:
-            '563492ad6f9170000100000154dfd7cac5734ffbab147db82c7618e9'
-        }
-      }
-    )
-      .then(res => res.json())
-      .then(data =>
-        data.photos.forEach(url =>
-          this.setState({ photos: this.state.photos.concat(url.src.portrait) })
-        )
-      );
-
-    window.addEventListener('scroll', this.handleScroll);
   }
 
-  handleScroll = e => {
-    let scrlHeight = document.scrollingElement.scrollHeight;
-    let clntHeight = document.scrollingElement.clientHeight;
-    let goingToScroll = scrlHeight - clntHeight;
-    let scrlTop = document.scrollingElement.scrollTop;
-    let parcentage = Math.ceil((scrlTop / goingToScroll) * 100);
-    // console.log(`${parcentage}%`)
-    if (parcentage === 96 && this.state.notSent) {
-      console.log(this.state.page);
-      this.setState({
-        page: this.state.page + 1,
-        notSent: false
-      });
-      fetch(
+  componentDidMount () {
+    window
+      .fetch(
         `https://cors-anywhere.herokuapp.com/https://api.pexels.com/v1/search?query=${
-          this.state.photos
+          this.state.queryStr
         }+query&per_page=20&page=${this.state.page}`,
         {
           headers: {
@@ -59,6 +25,43 @@ class Home extends Component {
           }
         }
       )
+      .then(res => res.json())
+      .then(data =>
+        data.photos.forEach(url =>
+          this.setState({ photos: this.state.photos.concat(url.src.portrait) })
+        )
+      )
+
+    window.addEventListener('scroll', this.handleScroll)
+  }
+
+  handleScroll = e => {
+    let scrlHeight = document.scrollingElement.scrollHeight
+    let clntHeight = document.scrollingElement.clientHeight
+    let goingToScroll = scrlHeight - clntHeight
+    let scrlTop = document.scrollingElement.scrollTop
+    let parcentage = Math.ceil((scrlTop / goingToScroll) * 100)
+
+    if (parcentage === 96 && this.state.notSent) {
+      console.log(this.state.page)
+      this.setState({
+        page: this.state.page + 1,
+        notSent: false
+      })
+      window
+        .fetch(
+          `https://cors-anywhere.herokuapp.com/https://api.pexels.com/v1/search?query=${
+            this.state.photos
+          }+query&per_page=20&page=${this.state.page}`,
+          {
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization:
+                '563492ad6f9170000100000154dfd7cac5734ffbab147db82c7618e9'
+            }
+          }
+        )
         .then(res => res.json())
         .then(data =>
           data.photos.forEach(url =>
@@ -67,19 +70,25 @@ class Home extends Component {
               notSent: true
             })
           )
-        );
+        )
     }
-  };
+  }
 
-  render() {
+  render () {
     return (
-      <div className="photos">
-        {this.state.photos.map(images => (
-          <img className="img" src={images} alt="not found" />
-        ))}
-      </div>
-    );
+      <>
+        <label className='search-box'>
+          <input type='text' placeholder='Search...' />
+          <img src={searchImg} alt='Search' className='search-img' />
+        </label>
+        <div className='photos'>
+          {this.state.photos.map(images => (
+            <img className='img' src={images} alt='not found' />
+          ))}
+        </div>
+      </>
+    )
   }
 }
 
-export default Home;
+export default Home
